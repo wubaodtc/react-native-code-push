@@ -16,7 +16,7 @@ import CodePush from "react-native-code-push";
  * different check frequency, such as ON_APP_START, for a 'hands-off' approach where CodePush.sync() does not
  * need to be explicitly called. All options of CodePush.sync() are also available in this decorator.
  */
-@CodePush({ checkFrequency: CodePush.CheckFrequency.MANUAL })
+@CodePush({ checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME, installMode: CodePush.InstallMode.ON_NEXT_RESUME })
 class CodePushDemoApp extends Component {
   constructor() {
     super();
