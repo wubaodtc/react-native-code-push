@@ -1,5 +1,5 @@
 const packageJson = require("./package.json");
-asdfasdf
+asd
 module.exports = {
   async request(verb, url, requestBody, callback) {
     if (typeof requestBody === "function") {
