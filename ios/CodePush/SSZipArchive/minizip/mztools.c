@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "zlib.h"
-#include "unzip.h"
+#include "unzipycl.h"
 #include "mztools.h"
 
 #define READ_8(adr)  ((unsigned char)*(adr))

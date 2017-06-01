@@ -19,7 +19,7 @@
 #include <string.h>
 #include <time.h>
 #include "zlib.h"
-#include "zip.h"
+#include "zipycl.h"
 
 #ifdef STDC
 #  include <stddef.h>
@@ -105,7 +105,7 @@ extern int errno;
 #  endif
 #endif
 
-const char zip_copyright[] = " zip 1.01 Copyright 1998-2004 Gilles Vollant - http://www.winimage.com/zLibDll";
+const char zip_copyright_ycl[] = " zip 1.01 Copyright 1998-2004 Gilles Vollant - http://www.winimage.com/zLibDll";
 
 typedef struct linkedlist_datablock_internal_s {
     struct linkedlist_datablock_internal_s *next_datablock;
@@ -828,6 +828,8 @@ extern zipFile ZEXPORT zipOpen4(const void *pathname, int append, ZPOS64_T disk_
         size_central_dir_to_read = size_central_dir;
         buf_size = SIZEDATA_INDATABLOCK;
         buf_read = (void *)ALLOC(buf_size);
+        if (buf_read == NULL)
+            err = ZIP_INTERNALERROR;
 
         if (ZSEEK64(ziinit.z_filefunc, ziinit.filestream,
                     offset_central_dir + byte_before_the_zipfile, ZLIB_FILEFUNC_SEEK_SET) != 0)
@@ -897,7 +899,7 @@ extern zipFile ZEXPORT zipOpen2_64(const void *pathname, int append, zipcharpc *
     return zipOpen4(pathname, append, 0, globalcomment, NULL);
 }
 
-extern zipFile ZEXPORT zipOpen3(const char *pathname, int append, ZPOS64_T disk_size, zipcharpc *globalcomment,
+extern zipFile ZEXPORT zipOpen3_ycl(const char *pathname, int append, ZPOS64_T disk_size, zipcharpc *globalcomment,
                                 zlib_filefunc_def *pzlib_filefunc32_def)
 {
     if (pzlib_filefunc32_def != NULL) {
@@ -908,7 +910,7 @@ extern zipFile ZEXPORT zipOpen3(const char *pathname, int append, ZPOS64_T disk_
     return zipOpen4(pathname, append, disk_size, globalcomment, NULL);
 }
 
-extern zipFile ZEXPORT zipOpen3_64(const void *pathname, int append, ZPOS64_T disk_size, zipcharpc *globalcomment,
+extern zipFile ZEXPORT zipOpen3_ycl_64(const void *pathname, int append, ZPOS64_T disk_size, zipcharpc *globalcomment,
                                    zlib_filefunc64_def *pzlib_filefunc_def)
 {
     if (pzlib_filefunc_def != NULL) {
@@ -923,12 +925,12 @@ extern zipFile ZEXPORT zipOpen3_64(const void *pathname, int append, ZPOS64_T di
 
 extern zipFile ZEXPORT zipOpen(const char *pathname, int append)
 {
-    return zipOpen3((const void *)pathname, append, 0, NULL, NULL);
+    return zipOpen3_ycl((const void *)pathname, append, 0, NULL, NULL);
 }
 
 extern zipFile ZEXPORT zipOpen64(const void *pathname, int append)
 {
-    return zipOpen3(pathname, append, 0, NULL, NULL);
+    return zipOpen3_ycl(pathname, append, 0, NULL, NULL);
 }
 
 extern int ZEXPORT zipOpenNewFileInZip4_64(zipFile file, const char *filename, const zip_fileinfo *zipfi,
@@ -1031,6 +1033,9 @@ extern int ZEXPORT zipOpenNewFileInZip4_64(zipFile file, const char *filename, c
         zi->ci.size_centralextrafree += 11; /* Extra space reserved for AES extra info */
 #endif
     zi->ci.central_header = (char *)ALLOC((uInt)zi->ci.size_centralheader + zi->ci.size_centralextrafree + size_comment);
+    if (zi->ci.central_header == NULL)
+        return ZIP_INTERNALERROR;
+    
     zi->ci.number_disk = zi->number_disk;
 
     /* Write central directory header */

@@ -113,11 +113,11 @@ extern zipFile ZEXPORT zipOpen2 OF((const char *pathname, int append, zipcharpc*
 extern zipFile ZEXPORT zipOpen2_64 OF((const void *pathname, int append, zipcharpc* globalcomment, 
     zlib_filefunc64_def* pzlib_filefunc_def));
 
-extern zipFile ZEXPORT zipOpen3 OF((const char *pathname, int append, ZPOS64_T disk_size, 
+extern zipFile ZEXPORT zipOpen3_ycl OF((const char *pathname, int append, ZPOS64_T disk_size,
     zipcharpc* globalcomment, zlib_filefunc_def* pzlib_filefunc_def));
 /* Same as zipOpen2 but allows specification of spanned zip size */
 
-extern zipFile ZEXPORT zipOpen3_64 OF((const void *pathname, int append, ZPOS64_T disk_size, 
+extern zipFile ZEXPORT zipOpen3_ycl_64 OF((const void *pathname, int append, ZPOS64_T disk_size,
     zipcharpc* globalcomment, zlib_filefunc64_def* pzlib_filefunc_def));
 
 extern int ZEXPORT zipOpenNewFileInZip OF((zipFile file, const char* filename, const zip_fileinfo* zipfi,

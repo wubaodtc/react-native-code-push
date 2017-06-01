@@ -26,9 +26,9 @@
  #endif*/
 
 #include "zlib.h"
-#include "unzip.h"
+#include "unzipycl.h"
 
-#include "Common.h"
+#include "SSZipCommon.h"
 
 #ifdef STDC
 #  include <stddef.h>
@@ -90,7 +90,7 @@ extern int errno;
 #  define TRYFREE(p) {if (p) free(p); }
 #endif
 
-const char unz_copyright[] =
+const char unz_copyright_ycl[] =
     " unzip 1.01 Copyright 1998-2004 Gilles Vollant - http://www.winimage.com/zLibDll";
 
 /* unz_file_info_interntal contain internal info about a file in zipfile*/
@@ -393,7 +393,7 @@ local unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def *pzlib_fi
     ZPOS64_T number_entry_CD;
     int err = UNZ_OK;
 
-    if (unz_copyright[0] != ' ')
+    if (unz_copyright_ycl[0] != ' ')
         return NULL;
 
     us.filestream = NULL;
